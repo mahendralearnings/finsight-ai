@@ -1,0 +1,198 @@
+{
+  "widgets": [
+    {
+      "type": "text",
+      "x": 0,
+      "y": 0,
+      "width": 24,
+      "height": 1,
+      "properties": {
+        "markdown": "# 📊 FinSight AI - Monitoring Dashboard"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 1,
+      "width": 8,
+      "height": 6,
+      "properties": {
+        "title": "Lambda Invocations",
+        "region": "us-east-1",
+        "metrics": [
+          ["AWS/Lambda", "Invocations", "FunctionName", "finsight-ingest_sec", {"label": "ingest_sec"}],
+          [".", ".", ".", "finsight-ingest_market", {"label": "ingest_market"}],
+          [".", ".", ".", "finsight-embed_documents", {"label": "embed_documents"}],
+          [".", ".", ".", "finsight-rag_query_handler", {"label": "rag_query"}]
+        ],
+        "stat": "Sum",
+        "period": 300,
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 8,
+      "y": 1,
+      "width": 8,
+      "height": 6,
+      "properties": {
+        "title": "Lambda Errors",
+        "region": "us-east-1",
+        "metrics": [
+          ["AWS/Lambda", "Errors", "FunctionName", "finsight-ingest_sec", {"label": "ingest_sec", "color": "#d62728"}],
+          [".", ".", ".", "finsight-ingest_market", {"label": "ingest_market", "color": "#ff7f0e"}],
+          [".", ".", ".", "finsight-embed_documents", {"label": "embed_documents", "color": "#2ca02c"}],
+          [".", ".", ".", "finsight-rag_query_handler", {"label": "rag_query", "color": "#1f77b4"}]
+        ],
+        "stat": "Sum",
+        "period": 300,
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 16,
+      "y": 1,
+      "width": 8,
+      "height": 6,
+      "properties": {
+        "title": "Lambda Duration (ms)",
+        "region": "us-east-1",
+        "metrics": [
+          ["AWS/Lambda", "Duration", "FunctionName", "finsight-ingest_sec", {"label": "ingest_sec"}],
+          [".", ".", ".", "finsight-embed_documents", {"label": "embed_documents"}],
+          [".", ".", ".", "finsight-rag_query_handler", {"label": "rag_query"}]
+        ],
+        "stat": "Average",
+        "period": 300,
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 7,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "title": "API Gateway - Requests",
+        "region": "us-east-1",
+        "metrics": [
+          ["AWS/ApiGateway", "Count", "ApiName", "finsight-ai-api", {"label": "Total Requests", "color": "#1f77b4"}],
+          [".", "4XXError", ".", ".", {"label": "4XX Errors", "color": "#ff7f0e"}],
+          [".", "5XXError", ".", ".", {"label": "5XX Errors", "color": "#d62728"}]
+        ],
+        "stat": "Sum",
+        "period": 300,
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12,
+      "y": 7,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "title": "API Gateway - Latency (ms)",
+        "region": "us-east-1",
+        "metrics": [
+          ["AWS/ApiGateway", "Latency", "ApiName", "finsight-ai-api", {"label": "Avg Latency", "color": "#2ca02c"}],
+          [".", "IntegrationLatency", ".", ".", {"label": "Lambda Time", "color": "#9467bd"}]
+        ],
+        "stat": "Average",
+        "period": 300,
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 13,
+      "width": 8,
+      "height": 6,
+      "properties": {
+        "title": "RDS - CPU Utilization",
+        "region": "us-east-1",
+        "metrics": [
+          ["AWS/RDS", "CPUUtilization", "DBInstanceIdentifier", "finsight-ai-pgvector"]
+        ],
+        "stat": "Average",
+        "period": 300,
+        "view": "timeSeries",
+        "yAxis": {"left": {"min": 0, "max": 100}}
+      }
+    },
+    {
+      "type": "metric",
+      "x": 8,
+      "y": 13,
+      "width": 8,
+      "height": 6,
+      "properties": {
+        "title": "RDS - Database Connections",
+        "region": "us-east-1",
+        "metrics": [
+          ["AWS/RDS", "DatabaseConnections", "DBInstanceIdentifier", "finsight-ai-pgvector"]
+        ],
+        "stat": "Average",
+        "period": 300,
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 16,
+      "y": 13,
+      "width": 8,
+      "height": 6,
+      "properties": {
+        "title": "RDS - Freeable Memory (MB)",
+        "region": "us-east-1",
+        "metrics": [
+          ["AWS/RDS", "FreeableMemory", "DBInstanceIdentifier", "finsight-ai-pgvector"]
+        ],
+        "stat": "Average",
+        "period": 300,
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 19,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "title": "S3 - Bucket Size (Bytes)",
+        "region": "us-east-1",
+        "metrics": [
+          ["AWS/S3", "BucketSizeBytes", "BucketName", "finsight-ai-raw-617297630012", "StorageType", "StandardStorage", {"label": "Raw Bucket"}],
+          [".", ".", ".", "finsight-ai-processed-617297630012", ".", ".", {"label": "Processed Bucket"}]
+        ],
+        "stat": "Average",
+        "period": 86400,
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12,
+      "y": 19,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "title": "Bedrock - Invocations",
+        "region": "us-east-1",
+        "metrics": [
+          ["AWS/Bedrock", "Invocations", "ModelId", "amazon.titan-embed-text-v2:0", {"label": "Titan Embeddings"}],
+          [".", ".", ".", "anthropic.claude-3-haiku-20240307-v1:0", {"label": "Claude 3 Haiku"}]
+        ],
+        "stat": "Sum",
+        "period": 300,
+        "view": "timeSeries"
+      }
+    }
+  ]
+}

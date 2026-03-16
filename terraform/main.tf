@@ -1,0 +1,74 @@
+module "s3" {
+  source     = "./modules/s3_data_lake"
+  project    = var.project
+  account_id = data.aws_caller_identity.current.account_id
+}
+
+
+###For IAM module 
+
+module "iam" {
+  source     = "./modules/iam"
+  project    = var.project
+  account_id = data.aws_caller_identity.current.account_id
+}
+
+
+#For secret manager
+
+module "secrets" {
+  source  = "./modules/secrets"
+  project = var.project
+}
+
+
+module "networking" {
+  source  = "./modules/networking"
+  project = var.project
+}
+
+
+###For RDS_pgvector
+
+module "rds" {
+  source             = "./modules/rds_pgvector"
+  project            = var.project
+  private_subnet_ids = module.networking.private_subnet_ids
+  rds_sg_id          = module.networking.rds_sg_id
+  db_password        = var.db_password
+}
+
+module "lambda_functions" {
+  source                   = "./modules/lambda_functions"
+  aws_region               = "us-east-1"
+  lambda_exec_role_arn     = "arn:aws:iam::617297630012:role/finsight-ai-lambda-exec-role"
+  private_subnet_ids       = module.networking.private_subnet_ids
+  lambda_security_group_id = module.networking.lambda_sg_id
+  rds_secret_id            = "finsight/rds/credentials"
+  s3_raw_bucket            = module.s3.bucket_names["raw"]
+  s3_processed_bucket      = module.s3.bucket_names["processed"]
+}
+
+
+module "api_gateway" {
+  source = "./modules/api_gateway"
+
+  project_name = var.project   # Changed from var.project_name
+
+  rag_query_handler_invoke_arn    = module.lambda_functions.rag_query_handler_invoke_arn
+  rag_query_handler_function_name = module.lambda_functions.rag_query_handler_function_name
+
+  throttle_burst_limit = 100
+  throttle_rate_limit  = 50
+  quota_limit          = 10000
+  quota_period         = "DAY"
+
+  log_retention_days = 30
+  enable_data_trace  = true
+
+  tags = {
+    Project     = var.project
+    Environment = "Production"
+    ManagedBy   = "Terraform"
+  }
+}

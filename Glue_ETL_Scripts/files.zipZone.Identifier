@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://claude.ai/chat/dfed066a-dec7-4a50-846f-460a2214b242
+HostUrl=https://claude.ai/api/organizations/2120665e-3e9d-463d-b87a-87294721696c/conversations/dfed066a-dec7-4a50-846f-460a2214b242/wiggle/download-files?paths=%2Fmnt%2Fuser-data%2Foutputs%2Ffinsight-glue-python-shell%2FREADME.md&paths=%2Fmnt%2Fuser-data%2Foutputs%2Ffinsight-glue-python-shell%2Fprocess_sec_filings.py&paths=%2Fmnt%2Fuser-data%2Foutputs%2Ffinsight-glue-python-shell%2Fprocess_market_data.py&paths=%2Fmnt%2Fuser-data%2Foutputs%2Ffinsight-glue-python-shell%2Fprocess_news.py
