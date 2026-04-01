@@ -1,0 +1,246 @@
+openapi: 3.0.3
+info:
+  title: FinSight AI Financial Calculator
+  description: |
+    Financial calculation tools for the FinSight AI Agent.
+    These tools help perform financial analysis calculations like
+    growth rates, ratios, margins, and comparisons.
+  version: 1.0.0
+
+paths:
+  /calculate-growth:
+    post:
+      operationId: calculateGrowthRate
+      summary: Calculate growth rate between two values
+      description: |
+        Calculate year-over-year or period-over-period growth rate.
+        Use this when comparing revenue, profit, or any metric across 
+        two time periods. Returns the percentage change.
+        
+        Example: If 2023 revenue was $383B and 2024 revenue was $391B,
+        this will calculate the growth rate as 2.02%.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - old_value
+                - new_value
+              properties:
+                old_value:
+                  type: number
+                  description: The previous period's value (e.g., 2023 revenue in billions)
+                new_value:
+                  type: number
+                  description: The current period's value (e.g., 2024 revenue in billions)
+      responses:
+        '200':
+          description: Growth rate calculated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  growth_rate_percent:
+                    type: number
+                    description: The calculated growth rate as a percentage
+                  interpretation:
+                    type: string
+                    description: Human-readable interpretation of the result
+
+  /calculate-ratio:
+    post:
+      operationId: calculateRatio
+      summary: Calculate a financial ratio
+      description: |
+        Calculate financial ratios like P/E ratio, debt-to-equity ratio,
+        current ratio, or any ratio that divides one value by another.
+        
+        Example: To calculate P/E ratio, use stock price as numerator
+        and earnings per share as denominator.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - numerator
+                - denominator
+              properties:
+                numerator:
+                  type: number
+                  description: The top number in the ratio (e.g., stock price for P/E)
+                denominator:
+                  type: number
+                  description: The bottom number in the ratio (e.g., EPS for P/E)
+                ratio_name:
+                  type: string
+                  description: Name of the ratio being calculated (e.g., "P/E Ratio", "Debt-to-Equity")
+                  default: ratio
+      responses:
+        '200':
+          description: Ratio calculated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  ratio_value:
+                    type: number
+                  ratio_name:
+                    type: string
+
+  /calculate-margin:
+    post:
+      operationId: calculateMargin
+      summary: Calculate profit margin percentage
+      description: |
+        Calculate profit margin as a percentage of revenue.
+        Use this for gross margin, operating margin, or net profit margin.
+        
+        Formula: (profit / revenue) * 100
+        
+        Example: If revenue is $391B and net profit is $97B,
+        net profit margin is 24.81%.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - revenue
+                - profit
+              properties:
+                revenue:
+                  type: number
+                  description: Total revenue amount
+                profit:
+                  type: number
+                  description: Profit amount (gross, operating, or net)
+                margin_type:
+                  type: string
+                  description: Type of margin (gross, operating, net profit)
+                  default: profit
+      responses:
+        '200':
+          description: Margin calculated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  margin_percent:
+                    type: number
+                  interpretation:
+                    type: string
+
+  /calculate-cagr:
+    post:
+      operationId: calculateCAGR
+      summary: Calculate Compound Annual Growth Rate
+      description: |
+        Calculate CAGR (Compound Annual Growth Rate) over multiple years.
+        Use this to understand the smoothed annual growth rate over a period.
+        
+        Formula: ((end_value / start_value) ^ (1/years) - 1) * 100
+        
+        Example: If 2019 revenue was $260B and 2024 revenue is $391B,
+        the 5-year CAGR is approximately 8.5%.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - start_value
+                - end_value
+                - years
+              properties:
+                start_value:
+                  type: number
+                  description: The starting value (e.g., revenue at beginning of period)
+                end_value:
+                  type: number
+                  description: The ending value (e.g., revenue at end of period)
+                years:
+                  type: integer
+                  description: Number of years between start and end
+      responses:
+        '200':
+          description: CAGR calculated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  cagr_percent:
+                    type: number
+                  interpretation:
+                    type: string
+
+  /compare-values:
+    post:
+      operationId: compareValues
+      summary: Compare and rank multiple values
+      description: |
+        Compare multiple companies or metrics and rank them from highest to lowest.
+        Also calculates the percentage difference from the highest value.
+        
+        Example: Compare Apple, Microsoft, and Google revenues to see
+        which is highest and by how much.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - values
+              properties:
+                values:
+                  type: array
+                  description: List of items to compare
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Name of the company or metric
+                      value:
+                        type: number
+                        description: The value to compare
+                metric_name:
+                  type: string
+                  description: Name of the metric being compared (e.g., "Revenue", "Profit Margin")
+                  default: value
+      responses:
+        '200':
+          description: Comparison completed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  comparisons:
+                    type: array
+                    items:
+                      type: object
+                  highest:
+                    type: string
+                  lowest:
+                    type: string

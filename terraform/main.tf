@@ -95,3 +95,45 @@ output "guardrail_version" {
   value       = module.guardrails.guardrail_version
 }
 
+# =============================================================================
+# ADD THIS TO YOUR ROOT terraform/main.tf
+# =============================================================================
+
+# Bedrock Agent Module
+module "bedrock_agent" {
+  source = "./modules/bedrock_agents"
+  
+  project_name = "finsight-ai"
+  aws_region   = "us-east-1"
+  environment  = "dev"
+  
+  # Connect to Guardrails (Feature 1!)
+  guardrail_id      = module.guardrails.guardrail_id
+  guardrail_version = module.guardrails.guardrail_version
+  
+  tags = {
+    Project     = "finsight-ai"
+    Component   = "bedrock-agent"
+    Environment = "dev"
+    ManagedBy   = "terraform"
+  }
+}
+
+# =============================================================================
+# OUTPUTS (Add these to your root main.tf as well)
+# =============================================================================
+
+output "agent_id" {
+  description = "Bedrock Agent ID"
+  value       = module.bedrock_agent.agent_id
+}
+
+output "agent_alias_id" {
+  description = "Bedrock Agent Alias ID (for invoking)"
+  value       = module.bedrock_agent.agent_alias_id
+}
+
+output "calculator_lambda_name" {
+  description = "Financial Calculator Lambda name"
+  value       = module.bedrock_agent.calculator_lambda_name
+}
