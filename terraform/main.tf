@@ -72,3 +72,26 @@ module "api_gateway" {
     ManagedBy   = "Terraform"
   }
 }
+
+
+# =============================================================================
+# GUARDRAILS MODULE
+# =============================================================================
+
+module "guardrails" {
+  source = "./modules/guardrails"
+  
+  project_name = "finsight-ai"
+  environment  = "dev"
+}
+# Output the guardrail ID for use in Lambda
+output "guardrail_id" {
+  description = "Guardrail ID for Lambda integration"
+  value       = module.guardrails.guardrail_id
+}
+
+output "guardrail_version" {
+  description = "Guardrail version for Lambda integration"
+  value       = module.guardrails.guardrail_version
+}
+
